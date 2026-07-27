@@ -17,9 +17,9 @@ const DATA = (function(){
   const meta = {
     title: "Norway Cup 2026",
     subtitle: "Gutter 15 (Boys 15)",
-    updated: "28.07.2026 kl. 01:06 (tabeller etter 2 av 3 gruppekamper)",
+    updated: "28.07.2026 kl. 01:16 (tabeller etter 2 av 3 gruppekamper)",
     sourceUrl: "https://norwaycup.cupmanager.net/2026,nb/result/division/80269931",
-    note: "Tabeller etter 2 av 3 gruppekamper. Alle plasseringer i sluttspilltreet er foreløpige til gruppene er ferdigspilt. Mangler fortsatt: 4 av 6 innledende 1/64-kamper i Playoff A (parene for 2.-plassene fra gr. 24/25/26/28/29/32/33/34) og hele Playoff B-stigen."
+    note: "Tabeller etter 2 av 3 gruppekamper. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt. Playoff B-stigen mangler fortsatt."
   };
 
   const rules = { win: 3, draw: 1, loss: 0 };
@@ -69,20 +69,19 @@ const DATA = (function(){
   ];
 
   // ---------- Playoff A ----------
-  const gs = (g,pos) => ({type:"group", group:String(g), pos});
+  const gs = (g,pos,note) => { const s = {type:"group", group:String(g), pos}; if(note) s.note = note; return s; };
   const W  = id => ({type:"winner", match:id});
-  const TBD = {type:"tbd", label:"2.-plass fra gr. 24/25/26/28/29/32/33/34"};
   const M = (id, home, away, time) => ({id, home, away, hs:null, as:null, time: time||""});
 
-  // 1/64-finaler (innledende). P2, P4, P5, P6: par ikke bekreftet ennå
-  // (2.-plassene fra gr. 24, 25, 26, 28, 29, 32, 33, 34 skal inn her).
+  // 1/64-finaler (innledende) – bekreftet fra offisiell stige.
+  // P6 utledet: 2. i gr. 24 og 33 er de eneste som gjenstår.
   const r64 = [
     M("P1", gs(31,2), gs(30,2)),
-    M("P2", TBD, TBD),
+    M("P2", gs(26,2), gs(34,2)),
     M("P3", gs(27,2), gs(35,2)),
-    M("P4", TBD, TBD),
-    M("P5", TBD, TBD),
-    M("P6", TBD, TBD)
+    M("P4", gs(25,2), gs(32,2)),
+    M("P5", gs(28,2), gs(29,2)),
+    M("P6", gs(24,2), gs(33,2))
   ];
 
   // 1/32-finaler i offisiell trerekkefølge (ovenfra og ned)

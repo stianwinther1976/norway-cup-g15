@@ -139,7 +139,7 @@
     if(slot.type === "team") return {name:slot.name, provisional:false, label:""};
     if(slot.type === "group"){
       const st = standings[slot.group];
-      const label = slot.pos + ". i gruppe " + slot.group;
+      const label = slot.pos + ". i gruppe " + slot.group + (slot.note ? " · " + slot.note : "");
       if(!st) return {name:"—", provisional:true, label};
       const row = st.rows[slot.pos-1];
       if(!row || st.playedCount === 0) return {name:"—", provisional:true, label};

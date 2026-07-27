@@ -94,11 +94,11 @@
 </header>
 <div class="wrap">
   <div class="note" id="note" style="display:none"></div>
+  <section id="brackets"></section>
   <section id="groups-section">
     <h2>Gruppespill</h2>
     <div class="groups" id="groups"></div>
   </section>
-  <section id="brackets"></section>
   <div class="legend">
     <span><span class="chip done"></span> Avgjort / vinner</span>
     <span><span class="chip prov"></span> Foreløpig – gruppa er ikke ferdigspilt</span>
@@ -112,41 +112,19 @@
   const D = window.DATA;
   const R = D.rules || {win:3, draw:1, loss:0};
 
-  /* ---------- standings ---------- */
+  /* ---------- standings ----------
+     Tabellrader kommer ferdig sortert fra offisiell kilde:
+     [navn, V, U, T, mål for, mål mot] */
   function computeStandings(g){
-    const rows = {};
-    g.teams.forEach(t => rows[t] = {team:t, pl:0,w:0,d:0,l:0, gf:0, ga:0, pts:0});
-    const played = g.matches.filter(m => m.hs != null && m.as != null);
-    played.forEach(m => {
-      const h = rows[m.home], a = rows[m.away];
-      if(!h || !a) return;
-      h.pl++; a.pl++; h.gf+=m.hs; h.ga+=m.as; a.gf+=m.as; a.ga+=m.hs;
-      if(m.hs > m.as){ h.w++; a.l++; h.pts += R.win; a.pts += R.loss; }
-      else if(m.hs < m.as){ a.w++; h.l++; a.pts += R.win; h.pts += R.loss; }
-      else { h.d++; a.d++; h.pts += R.draw; a.pts += R.draw; }
-    });
-    const list = Object.values(rows);
-    // head-to-head points among a tied subset
-    function h2h(teamA, teamB){
-      let pa=0;
-      played.forEach(m=>{
-        if((m.home===teamA && m.away===teamB)){
-          if(m.hs>m.as) pa+=R.win; else if(m.hs===m.as) pa+=R.draw;
-        } else if(m.home===teamB && m.away===teamA){
-          if(m.as>m.hs) pa+=R.win; else if(m.hs===m.as) pa+=R.draw;
-        }
-      });
-      return pa;
-    }
-    list.sort((x,y)=>
-      y.pts - x.pts ||
-      (y.gf-y.ga) - (x.gf-x.ga) ||
-      y.gf - x.gf ||
-      h2h(y.team,x.team) - h2h(x.team,y.team) ||
-      x.team.localeCompare(y.team,'nb')
-    );
-    const finished = g.matches.length > 0 && played.length === g.matches.length;
-    return {rows:list, finished, playedCount:played.length, total:g.matches.length};
+    const rows = g.table.map(r => ({
+      team:r[0], w:r[1], d:r[2], l:r[3], gf:r[4], ga:r[5],
+      pl:r[1]+r[2]+r[3],
+      pts:R.win*r[1] + R.draw*r[2] + R.loss*r[3]
+    }));
+    const playedCount = rows.reduce((s,r)=>s+r.pl,0)/2;
+    const total = g.totalMatches || 6;
+    const finished = g.finished === true || playedCount >= total;
+    return {rows, finished, playedCount, total};
   }
 
   const standings = {};
@@ -157,7 +135,7 @@
   (D.brackets||[]).forEach(b => b.rounds.forEach(r => r.matches.forEach(m => allMatches[m.id]=m)));
 
   function resolveSlot(slot){
-    if(!slot || slot.type === "tbd") return {name:"—", provisional:false, label:""};
+    if(!slot || slot.type === "tbd") return {name:"—", provisional:true, label:(slot && slot.label) || "ukjent"};
     if(slot.type === "team") return {name:slot.name, provisional:false, label:""};
     if(slot.type === "group"){
       const st = standings[slot.group];
@@ -200,24 +178,13 @@
   const groupsEl = document.getElementById('groups');
   (D.groups||[]).forEach(g => {
     const st = standings[g.id];
-    const qualifies = new Set();
-    (D.brackets||[]).forEach(b => b.rounds.forEach(r => r.matches.forEach(m => {
-      [m.home,m.away].forEach(s => { if(s && s.type==="group" && s.group===g.id && b.id==="A") qualifies.add(s.pos); });
-    })));
     let html = '<h3><span>'+esc(g.name)+'</span><span class="status '+(st.finished?'done':'live')+'">'
       + (st.finished ? 'Ferdigspilt' : st.playedCount + '/' + st.total + ' kamper spilt') + '</span></h3>';
     html += '<table><thead><tr><th>Lag</th><th>K</th><th>V</th><th>U</th><th>T</th><th>+/−</th><th>P</th></tr></thead><tbody>';
     st.rows.forEach((r,i) => {
-      html += '<tr class="'+(qualifies.has(i+1)?'q':'')+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
+      html += '<tr class="'+(i<2?'q':'')+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
     });
     html += '</tbody></table>';
-    html += '<div class="gmatches">';
-    g.matches.forEach(m => {
-      const sc = (m.hs!=null && m.as!=null) ? m.hs+' – '+m.as : (m.time || 'ikke spilt');
-      const cls = (m.hs!=null) ? 'sc' : 'sc tbd';
-      html += '<div><span>'+esc(m.home)+' – '+esc(m.away)+'</span><span class="'+cls+'">'+esc(sc)+'</span></div>';
-    });
-    html += '</div>';
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = html;
@@ -230,6 +197,14 @@
     const h2 = document.createElement('h2');
     h2.innerHTML = esc(b.name) + ' <span class="tag">sluttspill</span>';
     brEl.appendChild(h2);
+    if(b.pending){
+      const p = document.createElement('div');
+      p.className = 'note';
+      p.style.margin = '0';
+      p.textContent = b.pending;
+      brEl.appendChild(p);
+      return;
+    }
     const scroller = document.createElement('div');
     scroller.className = 'bracket-scroller';
     const bracket = document.createElement('div');

@@ -71,7 +71,7 @@ const DATA = (function(){
   // ---------- Playoff A ----------
   const gs = (g,pos) => ({type:"group", group:String(g), pos});
   const W  = id => ({type:"winner", match:id});
-  const TBD = {type:"tbd", label:"2.-plass, oppsett mangler"};
+  const TBD = {type:"tbd", label:"2.-plass fra gr. 24/25/26/28/29/32/33/34"};
   const M = (id, home, away, time) => ({id, home, away, hs:null, as:null, time: time||""});
 
   // 1/64-finaler (innledende). P2, P4, P5, P6: par ikke bekreftet ennå

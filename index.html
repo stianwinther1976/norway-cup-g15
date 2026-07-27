@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Norway Cup 2026 – G15 sluttspilltre</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --surface:#ffffff; --border:#e3e6ea;
+    --ink:#1a2330; --ink2:#55606e; --ink3:#8a94a1;
+    --accent:#2456b0; --accent-soft:#e8eefb;
+    --win:#1a7f4e; --win-soft:#e6f4ec;
+    --prov:#9a6b00; --prov-soft:#fdf3dc; --prov-border:#d9a520;
+    --line:#c9cfd7;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12161c; --surface:#1b2129; --border:#2b333e;
+      --ink:#e8ecf1; --ink2:#a7b0bb; --ink3:#71808f;
+      --accent:#7ba3e8; --accent-soft:#1f2c44;
+      --win:#5cc48f; --win-soft:#173527;
+      --prov:#e3b74a; --prov-soft:#33290f; --prov-border:#a8842a;
+      --line:#3a434f;
+    }
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg); color:var(--ink); line-height:1.45; padding-bottom:48px;}
+  header{background:var(--surface); border-bottom:1px solid var(--border); padding:20px 16px 14px;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 12px;}
+  h1{font-size:1.35rem; letter-spacing:-0.01em;}
+  h1 .sub{color:var(--accent); font-weight:700;}
+  .meta{color:var(--ink2); font-size:0.82rem; margin-top:4px;}
+  .meta a{color:var(--accent); text-decoration:none;}
+  .note{margin:14px auto 0; max-width:1080px; padding:10px 14px; background:var(--prov-soft);
+        border:1px solid var(--prov-border); border-radius:10px; color:var(--prov); font-size:0.88rem;}
+  h2{font-size:1.05rem; margin:26px 0 10px; display:flex; align-items:center; gap:8px;}
+  h2 .tag{font-size:0.7rem; font-weight:600; padding:2px 8px; border-radius:99px;
+          background:var(--accent-soft); color:var(--accent);}
+  /* ---- grupper ---- */
+  .groups{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:12px;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .card h3{font-size:0.92rem; padding:10px 12px; border-bottom:1px solid var(--border);
+           display:flex; justify-content:space-between; align-items:center;}
+  .status{font-size:0.68rem; font-weight:600; padding:2px 8px; border-radius:99px;}
+  .status.done{background:var(--win-soft); color:var(--win);}
+  .status.live{background:var(--prov-soft); color:var(--prov);}
+  table{width:100%; border-collapse:collapse; font-size:0.82rem;}
+  th{color:var(--ink3); font-weight:600; font-size:0.7rem; text-transform:uppercase;
+     letter-spacing:0.04em; padding:6px 6px; text-align:right;}
+  th:first-child, td:first-child{text-align:left; padding-left:12px;}
+  td{padding:6px 6px; text-align:right; border-top:1px solid var(--border);}
+  td.team{font-weight:600; text-align:left; white-space:nowrap; overflow:hidden;
+          text-overflow:ellipsis; max-width:150px;}
+  tr.q td{background:var(--accent-soft);}
+  td.pts{font-weight:700;}
+  .gmatches{border-top:1px solid var(--border); padding:8px 12px; font-size:0.78rem; color:var(--ink2);}
+  .gmatches div{display:flex; justify-content:space-between; padding:2px 0; gap:8px;}
+  .gmatches .sc{font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink);}
+  .gmatches .sc.tbd{color:var(--ink3); font-weight:400;}
+  /* ---- sluttspill ---- */
+  .bracket-scroller{overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:8px;}
+  .bracket{display:flex; gap:22px; min-width:min-content; align-items:stretch;}
+  .round{display:flex; flex-direction:column; min-width:215px;}
+  .round h4{font-size:0.74rem; color:var(--ink3); text-transform:uppercase;
+            letter-spacing:0.05em; margin-bottom:8px; text-align:center;}
+  .rmatches{display:flex; flex-direction:column; justify-content:space-around; flex:1; gap:14px;}
+  .match{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;}
+  .match .mtime{font-size:0.68rem; color:var(--ink3); padding:4px 10px 0;}
+  .side{display:flex; justify-content:space-between; align-items:center; gap:8px;
+        padding:7px 10px; font-size:0.85rem;}
+  .side + .side{border-top:1px solid var(--border);}
+  .side .nm{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;}
+  .side.winner .nm{font-weight:700; color:var(--win);}
+  .side.winner{background:var(--win-soft);}
+  .side .sc{font-variant-numeric:tabular-nums; font-weight:700; min-width:18px; text-align:right;}
+  .side.prov .nm{color:var(--prov); font-style:italic; font-weight:500;}
+  .match.prov{border-style:dashed; border-color:var(--prov-border);}
+  .slotlbl{display:block; font-size:0.64rem; color:var(--ink3); font-style:normal;}
+  .legend{margin-top:14px; font-size:0.78rem; color:var(--ink2); display:flex; flex-wrap:wrap; gap:14px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .chip{width:14px; height:14px; border-radius:4px; display:inline-block;}
+  .chip.prov{border:2px dashed var(--prov-border); background:var(--prov-soft);}
+  .chip.done{background:var(--win-soft); border:2px solid var(--win);}
+  footer{margin-top:34px; text-align:center; color:var(--ink3); font-size:0.75rem;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1 id="title"></h1>
+    <div class="meta" id="meta"></div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="note" id="note" style="display:none"></div>
+  <section id="groups-section">
+    <h2>Gruppespill</h2>
+    <div class="groups" id="groups"></div>
+  </section>
+  <section id="brackets"></section>
+  <div class="legend">
+    <span><span class="chip done"></span> Avgjort / vinner</span>
+    <span><span class="chip prov"></span> Foreløpig – gruppa er ikke ferdigspilt</span>
+  </div>
+  <footer id="footer"></footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const D = window.DATA;
+  const R = D.rules || {win:3, draw:1, loss:0};
+
+  /* ---------- standings ---------- */
+  function computeStandings(g){
+    const rows = {};
+    g.teams.forEach(t => rows[t] = {team:t, pl:0,w:0,d:0,l:0, gf:0, ga:0, pts:0});
+    const played = g.matches.filter(m => m.hs != null && m.as != null);
+    played.forEach(m => {
+      const h = rows[m.home], a = rows[m.away];
+      if(!h || !a) return;
+      h.pl++; a.pl++; h.gf+=m.hs; h.ga+=m.as; a.gf+=m.as; a.ga+=m.hs;
+      if(m.hs > m.as){ h.w++; a.l++; h.pts += R.win; a.pts += R.loss; }
+      else if(m.hs < m.as){ a.w++; h.l++; a.pts += R.win; h.pts += R.loss; }
+      else { h.d++; a.d++; h.pts += R.draw; a.pts += R.draw; }
+    });
+    const list = Object.values(rows);
+    // head-to-head points among a tied subset
+    function h2h(teamA, teamB){
+      let pa=0;
+      played.forEach(m=>{
+        if((m.home===teamA && m.away===teamB)){
+          if(m.hs>m.as) pa+=R.win; else if(m.hs===m.as) pa+=R.draw;
+        } else if(m.home===teamB && m.away===teamA){
+          if(m.as>m.hs) pa+=R.win; else if(m.hs===m.as) pa+=R.draw;
+        }
+      });
+      return pa;
+    }
+    list.sort((x,y)=>
+      y.pts - x.pts ||
+      (y.gf-y.ga) - (x.gf-x.ga) ||
+      y.gf - x.gf ||
+      h2h(y.team,x.team) - h2h(x.team,y.team) ||
+      x.team.localeCompare(y.team,'nb')
+    );
+    const finished = g.matches.length > 0 && played.length === g.matches.length;
+    return {rows:list, finished, playedCount:played.length, total:g.matches.length};
+  }
+
+  const standings = {};
+  (D.groups||[]).forEach(g => standings[g.id] = computeStandings(g));
+
+  /* ---------- slot resolution ---------- */
+  const allMatches = {};
+  (D.brackets||[]).forEach(b => b.rounds.forEach(r => r.matches.forEach(m => allMatches[m.id]=m)));
+
+  function resolveSlot(slot){
+    if(!slot || slot.type === "tbd") return {name:"—", provisional:false, label:""};
+    if(slot.type === "team") return {name:slot.name, provisional:false, label:""};
+    if(slot.type === "group"){
+      const st = standings[slot.group];
+      const label = slot.pos + ". i gruppe " + slot.group;
+      if(!st) return {name:"—", provisional:true, label};
+      const row = st.rows[slot.pos-1];
+      if(!row || st.playedCount === 0) return {name:"—", provisional:true, label};
+      return {name:row.team, provisional:!st.finished, label};
+    }
+    if(slot.type === "winner" || slot.type === "loser"){
+      const m = allMatches[slot.match];
+      const label = (slot.type==="winner"?"Vinner ":"Taper ") + slot.match;
+      if(!m) return {name:"—", provisional:false, label};
+      if(m.hs == null || m.as == null || m.hs === m.as) return {name:"—", provisional:false, label};
+      const homeWon = m.hs > m.as;
+      const side = (slot.type === "winner") === homeWon ? m.home : m.away;
+      const res = resolveSlot(side);
+      return {name:res.name, provisional:res.provisional, label};
+    }
+    return {name:"—", provisional:false, label:""};
+  }
+
+  /* ---------- render header ---------- */
+  document.getElementById('title').innerHTML =
+    esc(D.meta.title) + ' <span class="sub">' + esc(D.meta.subtitle) + '</span>';
+  document.getElementById('meta').innerHTML =
+    'Sist oppdatert: ' + esc(D.meta.updated) +
+    (D.meta.sourceUrl ? ' · <a href="'+D.meta.sourceUrl+'" target="_blank" rel="noopener">Offisielle resultater ↗</a>' : '');
+  document.title = D.meta.title + " – " + D.meta.subtitle;
+  if(D.meta.note){
+    const n = document.getElementById('note');
+    n.textContent = D.meta.note; n.style.display = 'block';
+  }
+  document.getElementById('footer').textContent =
+    'Uoffisiell resultatside · data legges inn manuelt fra Norway Cups offisielle sider';
+
+  function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  /* ---------- render groups ---------- */
+  const groupsEl = document.getElementById('groups');
+  (D.groups||[]).forEach(g => {
+    const st = standings[g.id];
+    const qualifies = new Set();
+    (D.brackets||[]).forEach(b => b.rounds.forEach(r => r.matches.forEach(m => {
+      [m.home,m.away].forEach(s => { if(s && s.type==="group" && s.group===g.id && b.id==="A") qualifies.add(s.pos); });
+    })));
+    let html = '<h3><span>'+esc(g.name)+'</span><span class="status '+(st.finished?'done':'live')+'">'
+      + (st.finished ? 'Ferdigspilt' : st.playedCount + '/' + st.total + ' kamper spilt') + '</span></h3>';
+    html += '<table><thead><tr><th>Lag</th><th>K</th><th>V</th><th>U</th><th>T</th><th>+/−</th><th>P</th></tr></thead><tbody>';
+    st.rows.forEach((r,i) => {
+      html += '<tr class="'+(qualifies.has(i+1)?'q':'')+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    html += '<div class="gmatches">';
+    g.matches.forEach(m => {
+      const sc = (m.hs!=null && m.as!=null) ? m.hs+' – '+m.as : (m.time || 'ikke spilt');
+      const cls = (m.hs!=null) ? 'sc' : 'sc tbd';
+      html += '<div><span>'+esc(m.home)+' – '+esc(m.away)+'</span><span class="'+cls+'">'+esc(sc)+'</span></div>';
+    });
+    html += '</div>';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = html;
+    groupsEl.appendChild(card);
+  });
+
+  /* ---------- render brackets ---------- */
+  const brEl = document.getElementById('brackets');
+  (D.brackets||[]).forEach(b => {
+    const h2 = document.createElement('h2');
+    h2.innerHTML = esc(b.name) + ' <span class="tag">sluttspill</span>';
+    brEl.appendChild(h2);
+    const scroller = document.createElement('div');
+    scroller.className = 'bracket-scroller';
+    const bracket = document.createElement('div');
+    bracket.className = 'bracket';
+    b.rounds.forEach(r => {
+      const col = document.createElement('div');
+      col.className = 'round';
+      col.innerHTML = '<h4>'+esc(r.name)+'</h4>';
+      const box = document.createElement('div');
+      box.className = 'rmatches';
+      r.matches.forEach(m => {
+        const hRes = resolveSlot(m.home), aRes = resolveSlot(m.away);
+        const decided = m.hs!=null && m.as!=null;
+        const hWin = decided && m.hs>m.as, aWin = decided && m.as>m.hs;
+        const provisional = hRes.provisional || aRes.provisional;
+        const el = document.createElement('div');
+        el.className = 'match' + (provisional ? ' prov' : '');
+        el.innerHTML =
+          (m.time ? '<div class="mtime">'+esc(m.time)+'</div>' : '') +
+          sideHtml(hRes, m.hs, hWin) + sideHtml(aRes, m.as, aWin);
+        box.appendChild(el);
+      });
+      col.appendChild(box);
+      bracket.appendChild(col);
+    });
+    scroller.appendChild(bracket);
+    brEl.appendChild(scroller);
+  });
+
+  function sideHtml(res, score, won){
+    const cls = 'side' + (won ? ' winner' : '') + (res.provisional ? ' prov' : '');
+    const lbl = res.label ? '<span class="slotlbl">'+esc(res.label)+(res.provisional?' · foreløpig':'')+'</span>' : '';
+    return '<div class="'+cls+'"><span class="nm">'+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
+  }
+})();
+</script>
+</body>
+</html>

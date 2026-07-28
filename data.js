@@ -20,7 +20,7 @@ const DATA = (function(){
     updated: "28.07.2026 kl. 02:15 (tabeller etter 2 av 3 gruppekamper)",
     sourceUrl: "https://norwaycup.cupmanager.net/2026,nb/result/division/80269931",
     favorite: "Gui Sportsklubb",
-    note: "Tabeller etter 2 av 3 gruppekamper. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt. Playoff B-stigen mangler fortsatt."
+    note: "Tabeller etter 2 av 3 gruppekamper. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt."
   };
 
   const rules = { win: 3, draw: 1, loss: 0 };
@@ -133,11 +133,6 @@ const DATA = (function(){
         {name:"Semifinaler",  matches:sf},
         {name:"Finale",       matches:fin}
       ]
-    },
-    {
-      id: "B", name: "Playoff B",
-      pending: "Stigen for Playoff B er ikke lagt inn ennå – send skjermbilder av den, så kommer den inn her. (B-finale: fre 31.07 kl. 12:00)",
-      rounds: []
     }
   ];
 

@@ -118,9 +118,11 @@
 
 <script src="data.js"></script>
 <script>
-(function(){
-  const D = window.DATA;
+function renderAll(D){
   const R = D.rules || {win:3, draw:1, loss:0};
+  document.getElementById('brackets').innerHTML = '';
+  document.getElementById('groups').innerHTML = '';
+  document.querySelectorAll('.overlay').forEach(o => o.remove());
 
   /* ---------- standings ----------
      Tabellrader kommer ferdig sortert fra offisiell kilde:
@@ -326,6 +328,31 @@
     const lbl = res.label ? '<span class="slotlbl">'+esc(res.label)+(res.provisional?' · foreløpig':'')+'</span>' : '';
     return '<div class="'+cls+'"'+data+'><span class="nm">'+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
   }
+}
+
+/* Første visning fra data.js som fulgte med siden */
+renderAll(window.DATA);
+
+/* Auto-oppdatering: hent ferske data forbi all caching, hvert 90. sekund */
+(function(){
+  if(!location.protocol.startsWith('http')) return;
+  let current = (window.DATA.meta && window.DATA.meta.updated) || '';
+  async function refresh(){
+    try{
+      const res = await fetch('data.js?_=' + Date.now(), {cache:'no-store'});
+      if(!res.ok) return;
+      const txt = await res.text();
+      const fresh = new Function(txt + '\n;return DATA;')();
+      if(fresh && fresh.meta && fresh.meta.updated !== current){
+        current = fresh.meta.updated;
+        window.DATA = fresh;
+        renderAll(fresh);
+      }
+    }catch(e){ /* stille – prøver igjen */ }
+  }
+  refresh();
+  setInterval(refresh, 90000);
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) refresh(); });
 })();
 </script>
 </body>

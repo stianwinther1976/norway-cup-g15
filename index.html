@@ -75,6 +75,10 @@
   .side.winner{background:var(--win-soft);}
   .side .sc{font-variant-numeric:tabular-nums; font-weight:700; min-width:18px; text-align:right;}
   .side.prov .nm{color:var(--prov); font-style:italic; font-weight:500;}
+  .side.fav{background:var(--accent-soft); box-shadow:inset 3px 0 0 var(--accent);}
+  .side.fav .nm{color:var(--accent); font-weight:800; font-style:normal;}
+  tr.fav td{background:var(--accent-soft); font-weight:700;}
+  tr.fav td.team{color:var(--accent);}
   .side.click{cursor:pointer;}
   .side.click:active{background:var(--accent-soft);}
   .match.prov{border-style:dashed; border-color:var(--prov-border);}
@@ -120,6 +124,7 @@
 <script>
 function renderAll(D){
   const R = D.rules || {win:3, draw:1, loss:0};
+  const FAV = (D.meta && D.meta.favorite) || null;
   document.getElementById('brackets').innerHTML = '';
   document.getElementById('groups').innerHTML = '';
   document.querySelectorAll('.overlay').forEach(o => o.remove());
@@ -197,8 +202,10 @@ function renderAll(D){
       + '</span></h3>';
     html += '<table><thead><tr><th>Lag</th><th>K</th><th>V</th><th>U</th><th>T</th><th>+/−</th><th>P</th></tr></thead><tbody>';
     st.rows.forEach((r,i) => {
-      const cls = (highlightTeam && r.team === highlightTeam) ? 'hl' : (i<2 ? 'q' : '');
-      html += '<tr class="'+cls+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
+      let cls = (highlightTeam && r.team === highlightTeam) ? 'hl' : (i<2 ? 'q' : '');
+      if(FAV && r.team === FAV && cls !== 'hl') cls += ' fav';
+      const star = (FAV && r.team === FAV) ? '⭐ ' : '';
+      html += '<tr class="'+cls+'"><td class="team">'+(i+1)+'. '+star+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
     });
     html += '</tbody></table>';
     const card = document.createElement('div');
@@ -323,10 +330,11 @@ function renderAll(D){
 
   function sideHtml(res, score, won){
     const clickable = !!res.groupId && res.name !== "—";
-    const cls = 'side' + (won ? ' winner' : '') + (res.provisional ? ' prov' : '') + (clickable ? ' click' : '');
+    const isFav = FAV && res.name === FAV;
+    const cls = 'side' + (won ? ' winner' : '') + (res.provisional ? ' prov' : '') + (clickable ? ' click' : '') + (isFav ? ' fav' : '');
     const data = clickable ? ' data-group="'+esc(res.groupId)+'" data-team="'+esc(res.name)+'"' : '';
     const lbl = res.label ? '<span class="slotlbl">'+esc(res.label)+(res.provisional?' · foreløpig':'')+'</span>' : '';
-    return '<div class="'+cls+'"'+data+'><span class="nm">'+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
+    return '<div class="'+cls+'"'+data+'><span class="nm">'+(isFav?'⭐ ':'')+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
   }
 }
 

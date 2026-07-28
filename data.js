@@ -17,8 +17,9 @@ const DATA = (function(){
   const meta = {
     title: "Norway Cup 2026",
     subtitle: "Gutter 15 (Boys 15)",
-    updated: "28.07.2026 kl. 01:16 (tabeller etter 2 av 3 gruppekamper)",
+    updated: "28.07.2026 kl. 02:15 (tabeller etter 2 av 3 gruppekamper)",
     sourceUrl: "https://norwaycup.cupmanager.net/2026,nb/result/division/80269931",
+    favorite: "Gui Sportsklubb",
     note: "Tabeller etter 2 av 3 gruppekamper. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt. Playoff B-stigen mangler fortsatt."
   };
 

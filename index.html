@@ -41,8 +41,8 @@
   .groups{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:12px;}
   .card{background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
   .card h3{font-size:0.92rem; padding:10px 12px; border-bottom:1px solid var(--border);
-           display:flex; justify-content:space-between; align-items:center;}
-  .status{font-size:0.68rem; font-weight:600; padding:2px 8px; border-radius:99px;}
+           display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .status{font-size:0.68rem; font-weight:600; padding:2px 8px; border-radius:99px; white-space:nowrap;}
   .status.done{background:var(--win-soft); color:var(--win);}
   .status.live{background:var(--prov-soft); color:var(--prov);}
   table{width:100%; border-collapse:collapse; font-size:0.82rem;}
@@ -53,36 +53,45 @@
   td.team{font-weight:600; text-align:left; white-space:nowrap; overflow:hidden;
           text-overflow:ellipsis; max-width:150px;}
   tr.q td{background:var(--accent-soft);}
+  tr.hl td{background:var(--accent); color:#fff;}
   td.pts{font-weight:700;}
-  .gmatches{border-top:1px solid var(--border); padding:8px 12px; font-size:0.78rem; color:var(--ink2);}
-  .gmatches div{display:flex; justify-content:space-between; padding:2px 0; gap:8px;}
-  .gmatches .sc{font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink);}
-  .gmatches .sc.tbd{color:var(--ink3); font-weight:400;}
   /* ---- sluttspill ---- */
   .bracket-scroller{overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:8px;}
-  .bracket{display:flex; gap:22px; min-width:min-content; align-items:stretch;}
-  .round{display:flex; flex-direction:column; min-width:215px;}
+  .bracket{display:flex; gap:36px; position:relative; min-width:min-content;}
+  .round{width:216px; flex:none; position:relative; z-index:1;}
   .round h4{font-size:0.74rem; color:var(--ink3); text-transform:uppercase;
-            letter-spacing:0.05em; margin-bottom:8px; text-align:center;}
-  .rmatches{display:flex; flex-direction:column; justify-content:space-around; flex:1; gap:14px;}
-  .match{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;}
+            letter-spacing:0.05em; height:18px; margin:0 0 10px; text-align:center;}
+  .rwrap{position:relative;}
+  svg.connectors{position:absolute; left:0; top:28px; z-index:0; pointer-events:none;}
+  svg.connectors path{stroke:var(--line); stroke-width:2; fill:none;}
+  .match{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;
+         position:absolute; left:0; right:0; transform:translateY(-50%);}
   .match .mtime{font-size:0.68rem; color:var(--ink3); padding:4px 10px 0;}
   .side{display:flex; justify-content:space-between; align-items:center; gap:8px;
         padding:7px 10px; font-size:0.85rem;}
   .side + .side{border-top:1px solid var(--border);}
-  .side .nm{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;}
+  .side .nm{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:165px;}
   .side.winner .nm{font-weight:700; color:var(--win);}
   .side.winner{background:var(--win-soft);}
   .side .sc{font-variant-numeric:tabular-nums; font-weight:700; min-width:18px; text-align:right;}
   .side.prov .nm{color:var(--prov); font-style:italic; font-weight:500;}
+  .side.click{cursor:pointer;}
+  .side.click:active{background:var(--accent-soft);}
   .match.prov{border-style:dashed; border-color:var(--prov-border);}
   .slotlbl{display:block; font-size:0.64rem; color:var(--ink3); font-style:normal;}
   .legend{margin-top:14px; font-size:0.78rem; color:var(--ink2); display:flex; flex-wrap:wrap; gap:14px;}
   .legend span{display:inline-flex; align-items:center; gap:6px;}
-  .chip{width:14px; height:14px; border-radius:4px; display:inline-block;}
+  .chip{width:14px; height:14px; border-radius:4px; display:inline-block; flex:none;}
   .chip.prov{border:2px dashed var(--prov-border); background:var(--prov-soft);}
   .chip.done{background:var(--win-soft); border:2px solid var(--win);}
   footer{margin-top:34px; text-align:center; color:var(--ink3); font-size:0.75rem;}
+  /* ---- popup ---- */
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:50;
+           display:flex; align-items:center; justify-content:center; padding:18px;}
+  .overlay .card{width:100%; max-width:430px; max-height:82vh; overflow:auto;
+                 box-shadow:0 12px 40px rgba(0,0,0,0.35);}
+  .overlay .close{background:none; border:none; color:var(--ink3); font-size:1.3rem;
+                  line-height:1; cursor:pointer; padding:2px 4px;}
 </style>
 </head>
 <body>
@@ -95,14 +104,15 @@
 <div class="wrap">
   <div class="note" id="note" style="display:none"></div>
   <section id="brackets"></section>
+  <div class="legend">
+    <span><span class="chip done"></span> Avgjort / vinner</span>
+    <span><span class="chip prov"></span> Foreløpig – gruppa er ikke ferdigspilt</span>
+    <span>👆 Trykk på et lag i treet for å se gruppetabellen</span>
+  </div>
   <section id="groups-section">
     <h2>Gruppespill</h2>
     <div class="groups" id="groups"></div>
   </section>
-  <div class="legend">
-    <span><span class="chip done"></span> Avgjort / vinner</span>
-    <span><span class="chip prov"></span> Foreløpig – gruppa er ikke ferdigspilt</span>
-  </div>
   <footer id="footer"></footer>
 </div>
 
@@ -128,7 +138,8 @@
   }
 
   const standings = {};
-  (D.groups||[]).forEach(g => standings[g.id] = computeStandings(g));
+  const groupById = {};
+  (D.groups||[]).forEach(g => { standings[g.id] = computeStandings(g); groupById[g.id] = g; });
 
   /* ---------- slot resolution ---------- */
   const allMatches = {};
@@ -142,8 +153,8 @@
       const label = slot.pos + ". i gruppe " + slot.group + (slot.note ? " · " + slot.note : "");
       if(!st) return {name:"—", provisional:true, label};
       const row = st.rows[slot.pos-1];
-      if(!row || st.playedCount === 0) return {name:"—", provisional:true, label};
-      return {name:row.team, provisional:!st.finished, label};
+      if(!row || st.playedCount === 0) return {name:"—", provisional:true, label, groupId:slot.group};
+      return {name:row.team, provisional:!st.finished, label, groupId:slot.group};
     }
     if(slot.type === "winner" || slot.type === "loser"){
       const m = allMatches[slot.match];
@@ -153,12 +164,14 @@
       const homeWon = m.hs > m.as;
       const side = (slot.type === "winner") === homeWon ? m.home : m.away;
       const res = resolveSlot(side);
-      return {name:res.name, provisional:res.provisional, label};
+      return {name:res.name, provisional:res.provisional, label, groupId:res.groupId};
     }
     return {name:"—", provisional:false, label:""};
   }
 
-  /* ---------- render header ---------- */
+  function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  /* ---------- header ---------- */
   document.getElementById('title').innerHTML =
     esc(D.meta.title) + ' <span class="sub">' + esc(D.meta.subtitle) + '</span>';
   document.getElementById('meta').innerHTML =
@@ -172,27 +185,47 @@
   document.getElementById('footer').textContent =
     'Uoffisiell resultatside · data legges inn manuelt fra Norway Cups offisielle sider';
 
-  function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  /* ---------- render groups ---------- */
-  const groupsEl = document.getElementById('groups');
-  (D.groups||[]).forEach(g => {
+  /* ---------- gruppekort (brukes både i lista og i popup) ---------- */
+  function makeGroupCard(g, highlightTeam){
     const st = standings[g.id];
-    let html = '<h3><span>'+esc(g.name)+'</span><span class="status '+(st.finished?'done':'live')+'">'
-      + (st.finished ? 'Ferdigspilt' : st.playedCount + '/' + st.total + ' kamper spilt') + '</span></h3>';
+    let html = '<h3><span>'+esc(g.name)+'</span><span style="display:flex;align-items:center;gap:8px;">'
+      + '<span class="status '+(st.finished?'done':'live')+'">'
+      + (st.finished ? 'Ferdigspilt' : st.playedCount + '/' + st.total + ' kamper spilt') + '</span>'
+      + (highlightTeam !== undefined ? '<button class="close" aria-label="Lukk">✕</button>' : '')
+      + '</span></h3>';
     html += '<table><thead><tr><th>Lag</th><th>K</th><th>V</th><th>U</th><th>T</th><th>+/−</th><th>P</th></tr></thead><tbody>';
     st.rows.forEach((r,i) => {
-      html += '<tr class="'+(i<2?'q':'')+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
+      const cls = (highlightTeam && r.team === highlightTeam) ? 'hl' : (i<2 ? 'q' : '');
+      html += '<tr class="'+cls+'"><td class="team">'+(i+1)+'. '+esc(r.team)+'</td><td>'+r.pl+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>';
     });
     html += '</tbody></table>';
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = html;
-    groupsEl.appendChild(card);
-  });
+    return card;
+  }
 
-  /* ---------- render brackets ---------- */
+  const groupsEl = document.getElementById('groups');
+  (D.groups||[]).forEach(g => groupsEl.appendChild(makeGroupCard(g)));
+
+  /* ---------- popup ---------- */
+  function showGroup(gid, teamName){
+    const g = groupById[gid];
+    if(!g) return;
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    const card = makeGroupCard(g, teamName || null);
+    ov.appendChild(card);
+    function closeIt(){ ov.remove(); }
+    ov.addEventListener('click', e => { if(e.target === ov) closeIt(); });
+    card.querySelector('.close').addEventListener('click', closeIt);
+    document.body.appendChild(ov);
+  }
+
+  /* ---------- sluttspilltre ---------- */
+  const COLW = 216, GAP = 36, RH = 136, HEADER = 28;
   const brEl = document.getElementById('brackets');
+
   (D.brackets||[]).forEach(b => {
     const h2 = document.createElement('h2');
     h2.innerHTML = esc(b.name) + ' <span class="tag">sluttspill</span>';
@@ -205,16 +238,64 @@
       brEl.appendChild(p);
       return;
     }
+
+    const rounds = b.rounds;
+    // grunnrunden = runden med flest kamper
+    let baseIdx = 0;
+    rounds.forEach((r,i) => { if(r.matches.length > rounds[baseIdx].matches.length) baseIdx = i; });
+    const H = rounds[baseIdx].matches.length * RH;
+
+    // posisjoner: id -> {col, y}
+    const pos = {};
+    rounds[baseIdx].matches.forEach((m,i) => pos[m.id] = {col:baseIdx, y:i*RH + RH/2});
+    for(let c = baseIdx-1; c >= 0; c--){
+      rounds[c].matches.forEach(m => {
+        const t = rounds[c+1].matches.find(x => [x.home,x.away].some(s => s && s.type==="winner" && s.match===m.id));
+        pos[m.id] = {col:c, y: t ? pos[t.id].y : RH/2};
+      });
+    }
+    for(let c = baseIdx+1; c < rounds.length; c++){
+      rounds[c].matches.forEach(m => {
+        const feeders = [m.home,m.away].filter(s => s && s.type==="winner").map(s => pos[s.match]).filter(Boolean);
+        const y = feeders.length ? feeders.reduce((a,p)=>a+p.y,0)/feeders.length : H/2;
+        pos[m.id] = {col:c, y};
+      });
+    }
+    const colX = c => c*(COLW+GAP);
+    const totalW = rounds.length*COLW + (rounds.length-1)*GAP;
+
     const scroller = document.createElement('div');
     scroller.className = 'bracket-scroller';
     const bracket = document.createElement('div');
     bracket.className = 'bracket';
-    b.rounds.forEach(r => {
+    bracket.style.height = (H + HEADER) + 'px';
+
+    // koblingslinjer
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','connectors');
+    svg.setAttribute('width', totalW);
+    svg.setAttribute('height', H);
+    let paths = '';
+    rounds.forEach(r => r.matches.forEach(m => {
+      [m.home, m.away].forEach(s => {
+        if(s && s.type === "winner" && pos[s.match]){
+          const f = pos[s.match], t = pos[m.id];
+          const x1 = colX(f.col) + COLW, y1 = f.y, x2 = colX(t.col), y2 = t.y;
+          const mx = x2 - GAP/2;
+          paths += '<path d="M '+x1+' '+y1+' H '+mx+' V '+y2+' H '+x2+'"/>';
+        }
+      });
+    }));
+    svg.innerHTML = paths;
+    bracket.appendChild(svg);
+
+    rounds.forEach((r, ci) => {
       const col = document.createElement('div');
       col.className = 'round';
       col.innerHTML = '<h4>'+esc(r.name)+'</h4>';
       const box = document.createElement('div');
-      box.className = 'rmatches';
+      box.className = 'rwrap';
+      box.style.height = H + 'px';
       r.matches.forEach(m => {
         const hRes = resolveSlot(m.home), aRes = resolveSlot(m.away);
         const decided = m.hs!=null && m.as!=null;
@@ -222,9 +303,13 @@
         const provisional = hRes.provisional || aRes.provisional;
         const el = document.createElement('div');
         el.className = 'match' + (provisional ? ' prov' : '');
+        el.style.top = pos[m.id].y + 'px';
         el.innerHTML =
           (m.time ? '<div class="mtime">'+esc(m.time)+'</div>' : '') +
           sideHtml(hRes, m.hs, hWin) + sideHtml(aRes, m.as, aWin);
+        el.querySelectorAll('.side.click').forEach(sd => {
+          sd.addEventListener('click', () => showGroup(sd.dataset.group, sd.dataset.team));
+        });
         box.appendChild(el);
       });
       col.appendChild(box);
@@ -235,9 +320,11 @@
   });
 
   function sideHtml(res, score, won){
-    const cls = 'side' + (won ? ' winner' : '') + (res.provisional ? ' prov' : '');
+    const clickable = !!res.groupId && res.name !== "—";
+    const cls = 'side' + (won ? ' winner' : '') + (res.provisional ? ' prov' : '') + (clickable ? ' click' : '');
+    const data = clickable ? ' data-group="'+esc(res.groupId)+'" data-team="'+esc(res.name)+'"' : '';
     const lbl = res.label ? '<span class="slotlbl">'+esc(res.label)+(res.provisional?' · foreløpig':'')+'</span>' : '';
-    return '<div class="'+cls+'"><span class="nm">'+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
+    return '<div class="'+cls+'"'+data+'><span class="nm">'+esc(res.name)+lbl+'</span><span class="sc">'+(score!=null?score:'')+'</span></div>';
   }
 })();
 </script>

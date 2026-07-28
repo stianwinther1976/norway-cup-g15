@@ -62,7 +62,13 @@
   .round h4{font-size:0.74rem; color:var(--ink3); text-transform:uppercase;
             letter-spacing:0.05em; height:18px; margin:0 0 10px; text-align:center;}
   .rwrap{position:relative;}
-  svg.connectors{position:absolute; left:0; top:28px; z-index:0; pointer-events:none;}
+  svg.connectors{position:absolute; left:0; top:0; z-index:0; pointer-events:none;}
+  .bracket-outer{position:relative;}
+  .roundhead-wrap{position:sticky; top:0; z-index:5; overflow:hidden; background:var(--bg);
+                  padding:8px 0 6px; border-bottom:1px solid var(--border); margin-bottom:8px;}
+  .roundhead{display:flex; gap:36px; will-change:transform;}
+  .roundhead span{width:216px; flex:none; text-align:center; font-size:0.74rem; font-weight:600;
+                  color:var(--ink3); text-transform:uppercase; letter-spacing:0.05em;}
   svg.connectors path{stroke:var(--line); stroke-width:2; fill:none;}
   .match{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;
          position:absolute; left:0; right:0; transform:translateY(-50%);}
@@ -273,11 +279,25 @@ function renderAll(D){
     const colX = c => c*(COLW+GAP);
     const totalW = rounds.length*COLW + (rounds.length-1)*GAP;
 
+    const outer = document.createElement('div');
+    outer.className = 'bracket-outer';
+    const headWrap = document.createElement('div');
+    headWrap.className = 'roundhead-wrap';
+    const headRow = document.createElement('div');
+    headRow.className = 'roundhead';
+    headRow.style.width = totalW + 'px';
+    headRow.innerHTML = rounds.map(r => '<span>'+esc(r.name)+'</span>').join('');
+    headWrap.appendChild(headRow);
+    outer.appendChild(headWrap);
+
     const scroller = document.createElement('div');
     scroller.className = 'bracket-scroller';
+    scroller.addEventListener('scroll', () => {
+      headRow.style.transform = 'translateX(-' + scroller.scrollLeft + 'px)';
+    });
     const bracket = document.createElement('div');
     bracket.className = 'bracket';
-    bracket.style.height = (H + HEADER) + 'px';
+    bracket.style.height = H + 'px';
 
     // koblingslinjer
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -301,7 +321,6 @@ function renderAll(D){
     rounds.forEach((r, ci) => {
       const col = document.createElement('div');
       col.className = 'round';
-      col.innerHTML = '<h4>'+esc(r.name)+'</h4>';
       const box = document.createElement('div');
       box.className = 'rwrap';
       box.style.height = H + 'px';
@@ -325,7 +344,8 @@ function renderAll(D){
       bracket.appendChild(col);
     });
     scroller.appendChild(bracket);
-    brEl.appendChild(scroller);
+    outer.appendChild(scroller);
+    brEl.appendChild(outer);
   });
 
   function sideHtml(res, score, won){

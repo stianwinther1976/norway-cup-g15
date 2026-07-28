@@ -17,10 +17,10 @@ const DATA = (function(){
   const meta = {
     title: "Norway Cup 2026",
     subtitle: "Gutter 15 (Boys 15)",
-    updated: "28.07.2026 kl. 22:30",
+    updated: "28.07.2026 kl. 22:40",
     sourceUrl: "https://norwaycup.cupmanager.net/2026,nb/result/division/80269931",
     favorite: "Gui Sportsklubb",
-    note: "Gruppespillet er så godt som ferdig – kun siste kamp i gruppe 19 og 21 gjenstår. Alt gult/stiplet i treet er foreløpig til disse er spilt."
+    note: "Gruppespillet er ferdig! Hele treet er nå låst med endelige plasseringer. Sluttspillet starter onsdag."
   };
 
   const rules = { win: 3, draw: 1, loss: 0 };
@@ -50,9 +50,9 @@ const DATA = (function(){
     G(16, [["Hasle-Løren IL 1",3,0,0,11,1],["Molde FK",2,0,1,6,4],["Skjoldar/Vats/Fjordar",1,0,2,4,5],["Kvernbit, IL",0,0,3,2,13]]),
     G(17, [["Randesund IL 1",3,0,0,14,1],["Vaulen IL",2,0,1,9,1],["Vuku IL",1,0,2,6,4],["Os TF 3",0,0,3,1,24]]),
     G(18, [["Sportsklubben Karmøy",2,1,0,4,1],["Langfjorden FK/Skåla",1,2,0,6,4],["Grei, SF",1,1,1,2,3],["Rosendal TL",0,0,3,2,6]]),
-    G(19, [["FK Fyllingsdalen 1",3,0,0,17,0],["Fløya, IF",1,0,1,5,3],["Kjelsås IL 2",1,0,2,2,11],["Korgen IL",0,0,2,0,10]]),
+    G(19, [["FK Fyllingsdalen 1",3,0,0,17,0],["Fløya, IF",2,0,1,12,3],["Kjelsås IL 2",1,0,2,2,11],["Korgen IL",0,0,3,0,17]]),
     G(20, [["Haslum IL Rød",3,0,0,16,4],["Ranheim IL 1",2,0,1,7,4],["Green-Kenya Academy",1,0,2,8,9],["FK Fyllingsdalen 2",0,0,3,0,14]]),
-    G(21, [["Førde IL 1",2,0,0,6,1],["Astor Fotballklubb 1",1,1,0,1,0],["SELECCION ELITE",1,0,2,3,6],["Forward, SK",0,1,2,1,4]]),
+    G(21, [["Førde IL 1",3,0,0,14,2],["Astor Fotballklubb 1",1,1,1,2,8],["SELECCION ELITE",1,0,2,3,6],["Forward, SK",0,1,2,1,4]]),
     G(22, [["Varegg/Sandviken 1",3,0,0,19,1],["Lillestrøm",2,0,1,14,3],["Holmlia SK",1,0,2,2,11],["Hasundgot IL",0,0,3,2,22]]),
     G(23, [["Førde IL 2",3,0,0,17,5],["Bærum SK",2,0,1,13,4],["Tiller IL",1,0,2,14,10],["Tana Ballklubb",0,0,3,5,30]]),
     G(24, [["Better Future Pakistan",2,1,0,8,2],["Sauda IL",2,0,1,5,2],["Trio, IL",0,2,1,3,6],["Kolbotn IL 2",0,1,2,2,8]]),

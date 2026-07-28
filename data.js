@@ -17,10 +17,10 @@ const DATA = (function(){
   const meta = {
     title: "Norway Cup 2026",
     subtitle: "Gutter 15 (Boys 15)",
-    updated: "28.07.2026 kl. 02:15 (tabeller etter 2 av 3 gruppekamper)",
+    updated: "28.07.2026 kl. 12:05 (3. runde i gruppespillet pågår)",
     sourceUrl: "https://norwaycup.cupmanager.net/2026,nb/result/division/80269931",
     favorite: "Gui Sportsklubb",
-    note: "Tabeller etter 2 av 3 gruppekamper. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt."
+    note: "3. runde i gruppespillet pågår. Lagene er plassert i treet slik gruppene ligger an nå – alt gult/stiplet er foreløpig til gruppene er ferdigspilt."
   };
 
   const rules = { win: 3, draw: 1, loss: 0 };
@@ -37,36 +37,36 @@ const DATA = (function(){
     G(3, [["Måløy FK",2,0,0,6,0],["Astor Fotballklubb 2",1,0,1,5,1],["Sykkylven IL",1,0,1,1,2],["Haslum IL Hvit",0,0,2,0,9]]),
     G(4, [["KFUM-Kam. Oslo 1",2,0,0,17,1],["Strømsgodset IF",1,0,1,6,3],["Øygarden IL",1,0,1,2,5],["Nessegutten/Sverre",0,0,2,0,16]]),
     G(5, [["Manglerud Star Fotball 1",2,0,0,4,2],["Bergen Nord Fotball",1,0,1,11,3],["Otta IL",1,0,1,3,3],["Giv Akt, IL",0,0,2,2,12]]),
-    G(6, [["Åsane Fotball",2,0,0,8,2],["BVH-G15-Lag1 (Bærums Verk)",2,0,0,6,3],["Kolnes IL",0,0,2,3,6],["Rival, SK",0,0,2,2,8]]),
-    G(7, [["Askøy FK",2,0,0,5,0],["Colégio Arbos",1,1,0,1,0],["Etne IL 2",0,1,1,0,2],["HSV Fotball 1",0,0,2,0,4]]),
+    G(6, [["Åsane Fotball",2,1,0,9,3],["BVH-G15-Lag1 (Bærums Verk)",2,1,0,7,4],["Kolnes IL",0,0,2,3,6],["Rival, SK",0,0,2,2,8]]),
+    G(7, [["Askøy FK",2,0,0,5,0],["Colégio Arbos",1,1,0,1,0],["Etne IL 2",1,1,1,2,3],["HSV Fotball 1",0,0,3,1,6]]),
     G(8, [["KFUM-Kam. Oslo 2",1,1,0,10,2],["Frøya IL Born 2011",1,1,0,5,4],["Baune, SK",1,0,1,2,8],["Tune IL",0,0,2,2,5]]),
     G(9, [["Klemetsrud IL 2",2,0,0,8,1],["Torridal IL",2,0,0,7,0],["HIF/Stein",0,0,2,1,5],["Folldal IF",0,0,2,0,10]]),
-    G(10, [["Os TF 1",2,0,0,9,3],["IL ROS",1,0,1,6,3],["V. Sverresborg/Vestbyen",1,0,1,6,7],["Hasle-Løren IL 2",0,0,2,1,9]]),
-    G(11, [["Jevnaker IF",2,0,0,8,1],["Florø SK",1,0,1,6,6],["Nessegutten/Sverre 2",1,0,1,6,6],["Manglerud Star Fotball 2",0,0,2,1,8]]),
+    G(10, [["Os TF 1",2,0,0,9,3],["IL ROS",1,1,1,9,6],["V. Sverresborg/Vestbyen",1,1,1,9,10],["Hasle-Løren IL 2",0,0,2,1,9]]),
+    G(11, [["Jevnaker IF",3,0,0,14,1],["Florø SK",1,0,1,6,6],["Nessegutten/Sverre 2",1,0,2,6,12],["Manglerud Star Fotball 2",0,0,2,1,8]]),
     G(12, [["Follo FK",2,0,0,10,0],["Elverum Fotball Sort",1,0,1,5,5],["Oppsal IF Fotball 2",1,0,1,3,5],["Askvoll IL",0,0,2,0,8]]),
     G(13, [["Bærum SK A",2,0,0,8,0],["Etne IL 1",1,0,1,3,3],["Flekkerøy",1,0,1,2,2],["Nordre Land IL/Torpa",0,0,2,1,9]]),
     G(14, [["Gjøa Youth (Brooklyn)",2,0,0,14,0],["Verdal IL",1,0,1,7,4],["Bremnes IL",1,0,1,4,1],["Klemetsrud IL 1",0,0,2,0,20]]),
     G(15, [["Kolbotn IL 1",2,0,0,13,0],["Storm BK 1",1,0,1,2,2],["Oppdal IL G15",1,0,1,2,6],["Ringebu-Fåvang FK",0,0,2,0,9]]),
-    G(16, [["Hasle-Løren IL 1",2,0,0,8,1],["Molde FK",2,0,0,5,1],["Skjoldar/Vats/Fjordar",0,0,2,1,3],["Kvernbit, IL",0,0,2,1,10]]),
+    G(16, [["Hasle-Løren IL 1",2,0,0,8,1],["Molde FK",2,0,0,5,1],["Skjoldar/Vats/Fjordar",1,0,2,4,5],["Kvernbit, IL",0,0,3,3,13]]),
     G(17, [["Randesund IL 1",2,0,0,13,1],["Vaulen IL",2,0,0,9,0],["Vuku IL",0,0,2,0,4],["Os TF 3",0,0,2,1,18]]),
     G(18, [["Langfjorden FK/Skåla",1,1,0,5,3],["Sportsklubben Karmøy",1,1,0,3,1],["Grei, SF",1,0,1,1,2],["Rosendal TL",0,0,2,2,5]]),
-    G(19, [["FK Fyllingsdalen 1",2,0,0,11,0],["Fløya, IF",1,0,1,5,3],["Kjelsås IL 2",1,0,1,2,5],["Korgen IL",0,0,2,0,10]]),
-    G(20, [["Haslum IL Rød",2,0,0,13,2],["Ranheim IL 1",2,0,0,5,1],["Green-Kenya Academy",0,0,2,3,9],["FK Fyllingsdalen 2",0,0,2,0,9]]),
-    G(21, [["Førde IL 1",2,0,0,6,1],["Astor Fotballklubb 1",0,1,0,0,0],["Forward, SK",0,1,1,0,2],["SELECCION ELITE",0,0,1,1,4]]),
-    G(22, [["Varegg/Sandviken 1",2,0,0,7,0],["Lillestrøm",1,0,1,8,3],["Holmlia SK",1,0,1,2,5],["Hasundgot IL",0,0,2,1,10]]),
-    G(23, [["Førde IL 2",2,0,0,5,3],["Bærum SK",1,0,1,9,2],["Tiller IL",1,0,1,12,6],["Tana Ballklubb",0,0,2,3,18]]),
-    G(24, [["Better Future Pakistan",1,1,0,3,2],["Sauda IL",1,0,1,2,2],["Trio, IL",0,2,0,3,3],["Kolbotn IL 2",0,1,1,2,3]]),
-    G(25, [["Tallinna JK Augur",1,1,0,9,2],["Vålerenga Fotball 1",1,1,0,4,3],["SK Vard Haugesund 2",1,0,1,8,2],["Vinne IL",0,0,2,0,14]]),
+    G(19, [["FK Fyllingsdalen 1",3,0,0,17,0],["Fløya, IF",1,0,1,5,3],["Kjelsås IL 2",1,0,2,2,11],["Korgen IL",0,0,2,0,10]]),
+    G(20, [["Haslum IL Rød",2,0,0,13,2],["Ranheim IL 1",2,0,0,5,1],["Green-Kenya Academy",1,0,2,8,9],["FK Fyllingsdalen 2",0,0,3,0,14]]),
+    G(21, [["Førde IL 1",2,0,0,6,1],["Astor Fotballklubb 1",1,1,0,1,0],["Forward, SK",0,1,1,0,2],["SELECCION ELITE",0,0,2,1,5]]),
+    G(22, [["Varegg/Sandviken 1",3,0,0,19,1],["Lillestrøm",1,0,1,8,3],["Holmlia SK",1,0,1,2,5],["Hasundgot IL",0,0,3,2,22]]),
+    G(23, [["Førde IL 2",3,0,0,17,5],["Bærum SK",2,0,1,13,4],["Tiller IL",1,0,2,14,10],["Tana Ballklubb",0,0,3,5,30]]),
+    G(24, [["Sauda IL",2,0,1,5,2],["Better Future Pakistan",1,1,0,3,2],["Trio, IL",0,2,1,3,6],["Kolbotn IL 2",0,1,1,2,3]]),
+    G(25, [["Tallinna JK Augur",2,1,0,12,3],["Vålerenga Fotball 1",1,1,0,4,3],["SK Vard Haugesund 2",1,0,2,9,5],["Vinne IL",0,0,2,0,14]]),
     G(26, [["Sædalen Idrettslag",2,0,0,11,1],["Melhus IL",2,0,0,7,1],["Surnadal IL",0,0,2,1,6],["KFUM-Kam. Oslo 3",0,0,2,1,12]]),
-    G(27, [["SK Vard Haugesund 1",2,0,0,5,0],["HSV Fotball 2",1,0,1,7,4],["Osterøy IL",1,0,1,1,1],["Vålerenga Fotball 2",0,0,2,0,8]]),
+    G(27, [["SK Vard Haugesund 1",3,0,0,13,0],["HSV Fotball 2",1,0,1,7,4],["Osterøy IL",1,0,1,1,1],["Vålerenga Fotball 2",0,0,3,0,16]]),
     G(28, [["Varegg/Sandviken 2",1,1,0,3,2],["Ørsta IL",0,2,0,4,4],["Finnøy IL",0,2,0,3,3],["Snarøya SK",0,1,1,3,4]]),
-    G(29, [["Nord, SK",2,0,0,8,2],["Odda FK",1,0,1,12,2],["Gossen IL Gekko",1,0,1,4,3],["Bærums Verk Hauger 3/4",0,0,2,0,17]]),
+    G(29, [["Gossen IL Gekko",2,0,1,16,4],["Nord, SK",2,0,0,8,2],["Odda FK",1,0,1,12,2],["Bærums Verk Hauger 3/4",0,0,3,1,29]]),
     G(30, [["Sogndal IL",2,0,0,6,0],["Skeid",1,0,1,7,7],["Vågå/Lom",1,0,1,4,6],["Ranheim IL 2",0,0,2,3,7]]),
-    G(31, [["Gui Sportsklubb",2,0,0,7,0],["Krokelvdalen Idrettslag",1,0,1,4,6],["Nationalkameratene",0,1,1,3,5],["Eidsvåg IL",0,1,1,1,4]]),
+    G(31, [["Gui Sportsklubb",2,0,0,7,0],["Krokelvdalen Idrettslag",1,1,1,4,6],["Eidsvåg IL",0,2,1,1,4],["Nationalkameratene",0,1,1,3,5]]),
     G(32, [["Åndalsnes",2,0,0,9,7],["Orkanger IF",1,0,1,9,4],["Grüner Fotball",1,0,1,8,6],["Vestsiden-Askøy IL",0,0,2,1,10]]),
     G(33, [["Kjelsås IL 1",2,0,0,5,1],["Eid IL",1,0,1,5,3],["Freidig, SPK",1,0,1,4,4],["Træff",0,0,2,0,6]]),
-    G(34, [["Bauleni United (BUSA)",2,0,0,8,2],["Greåker IF",1,0,1,1,3],["Guard/Rollon",0,1,1,2,3],["Frigg Oslo FK",0,1,1,4,7]]),
-    G(35, [["Grorud IL",2,0,0,10,0],["Emblem IL",0,2,0,0,0],["Kopervik IL G15",0,1,1,0,2],["Stjørdals-Blink",0,1,1,0,8]])
+    G(34, [["Bauleni United (BUSA)",3,0,0,10,3],["Greåker IF",1,0,1,1,3],["Guard/Rollon",0,1,2,3,5],["Frigg Oslo FK",0,1,1,4,7]]),
+    G(35, [["Grorud IL",2,0,0,10,0],["Emblem IL",0,2,0,0,0],["Kopervik IL G15",0,2,1,0,2],["Stjørdals-Blink",0,2,1,0,8]])
   ];
 
   // ---------- Playoff A ----------
